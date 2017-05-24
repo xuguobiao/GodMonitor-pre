@@ -30,12 +30,9 @@ public class GodMonitor {
     String className = methodSignature.getDeclaringType().getSimpleName();
     String methodName = methodSignature.getName();
 
-    final StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
+    DebugLog.log(className, buildLogMessage(methodName, " before execution "));
     Object result = joinPoint.proceed(); // 注解所在的方法/构造函数的执行的地方
-    stopWatch.stop();
-
-    DebugLog.log(className, buildLogMessage(methodName, stopWatch.getTotalTimeMillis()));
+    DebugLog.log(className, buildLogMessage(methodName, " after execution "));
 
     return result;
   }
@@ -44,17 +41,16 @@ public class GodMonitor {
    * Create a log message.
    *
    * @param methodName A string with the method name.
-   * @param methodDuration Duration of the method in milliseconds.
+   * @param info Extra info.
    * @return A string representing message.
    */
-  private static String buildLogMessage(String methodName, long methodDuration) {
+  private static String buildLogMessage(String methodName, String info) {
     StringBuilder message = new StringBuilder();
     message.append("GodMonitor --> ");
     message.append(methodName);
     message.append(" --> ");
     message.append("[");
-    message.append(methodDuration);
-    message.append("ms");
+    message.append(info);
     message.append("]");
 
     return message.toString();
